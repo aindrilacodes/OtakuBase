@@ -54,3 +54,7 @@ CLOUDAPISECRET=your_cloudinary_api_secret
 npm run dev
 ```
 This will start the API on http://localhost:<Your_Port_Number>
+
+## API Endpoints
+
+### Authentication
