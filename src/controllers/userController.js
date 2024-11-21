@@ -20,7 +20,26 @@ export const getProfileController = AsyncHandler(async (req, res) => {
   delete response._id;
   res.status(200).json(new ApiResponse(response, "User returned successful"));
 });
+export const updatePassword = AsyncHandler(async (req, res) => {
+  const { oldpassword, newpassword } = req.body;
+  const findemail = req.user.email;
+  if (!oldpassword || !newpassword)
+    throw new ApiError(400, "Enter oldpassword and newpassword both!");
+  const existingUser = await User.findOne({ email: findemail });
+  if (!existingUser) {
+    throw new ApiError(403, "Unauthorized access");
+  }
+  const isPasswordValid = await existingUser.passwordValidityCheck(oldpassword);
+  if (!isPasswordValid)
+    throw new ApiError(401, "Password Incorrect!Try again!!");
+  existingUser.password = newpassword;
+  const pass = await existingUser.save({ validateBeforeSave: true });
+  console.log(pass);
 
+  return res
+    .status(200)
+    .json(new ApiResponse({}, "Password changed successfully"));
+});
 export const getMyReviews = AsyncHandler(async (req, res) => {
   const getuser = req.user.email;
   const foundUser = await findUser(getuser);
