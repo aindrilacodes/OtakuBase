@@ -2,6 +2,8 @@ import Anime from "../models/anime.model.js";
 import AsyncHandler from "express-async-handler";
 import ApiError from "../helpers/customError.js";
 import ApiResponse from "../helpers/apiResponse.js";
+import { uploadOnCloudinary } from "../helpers/cloudinaryHelper.js";
+import cloudinary from "../config/cloudinary.config.js";
 const addAnime = AsyncHandler(async (req, res) => {
   const {
     anime_Name,
@@ -23,8 +25,19 @@ const addAnime = AsyncHandler(async (req, res) => {
     !sub_genre ||
     !genre
   ) {
-    throw new ApiError(400, "All fields required!");
+    return next(new ApiError(400, "All fields required!"));
   }
+
+  const Poster = req.file?.path;
+  if (!Poster) {
+    throw new ApiError(400, "Poster image is required");
+  }
+  console.log(Poster);
+  const poster = await uploadOnCloudinary(Poster);
+  if (!poster) {
+    throw new ApiError(500, "Error uploading poster to Cloudinary");
+  }
+
   let anime_details = {
     anime_Name,
     category,
@@ -32,18 +45,17 @@ const addAnime = AsyncHandler(async (req, res) => {
     release_Year,
     sub_genre,
     genre,
+    poster: {
+      url: poster.secure_url,
+      uploadedBy: req.user?.name || "Anonymous",
+      public_id: poster.public_id,
+    },
   };
-  // console.log(anime_details);
 
-  if (req.body.total_seasons) {
-    anime_details.total_seasons = total_seasons;
-  }
-  if (req.body.directed_by) {
-    anime_details.directed_by = directed_by;
-  }
-  if (req.body.duration) {
-    anime_details.duration = duration;
-  }
+  // Optional fields
+  if (total_seasons) anime_details.total_seasons = total_seasons;
+  if (directed_by) anime_details.directed_by = directed_by;
+  if (duration) anime_details.duration = duration;
 
   const anime = await Anime.create(anime_details);
 
@@ -67,8 +79,37 @@ const updateAnime = AsyncHandler(async (req, res) => {
     total_seasons,
     release_Year,
   } = req.body;
+  const updateFields = {};
 
-  if (
+  if (req.file?.path) {
+    const Poster = req.file.path;
+    if (!Poster) throw new ApiError(400, "No image provided for updation");
+    const anime = await Anime.findById(anime_id);
+    if (!anime) throw new ApiError(404, "Anime not found");
+
+    
+    //deleting old poster from cloudinary
+    if (anime.poster?.public_id) {
+      await cloudinary.uploader.destroy(anime.poster.public_id);
+      const poster = await uploadOnCloudinary(Poster);
+      if (!poster || !poster.url)
+        throw new ApiError(400, "Error while uploading poster: Upload failed");
+      updateFields.poster = {
+        url: poster.secure_url,
+        uploadedBy: req.user?.name || "Anonymous",
+        public_id: poster.public_id,
+      };
+    } else {
+      const poster = await uploadOnCloudinary(Poster);
+      if (!poster || !poster.url)
+        throw new ApiError(400, "Error while uploading poster: Upload failed");
+      updateFields.poster = {
+        url: poster.secure_url,
+        uploadedBy: req.user?.name || "Anonymous",
+        public_id: poster.public_id,
+      };
+    }
+  } else if (
     !anime_Name &&
     !description &&
     !directed_by &&
@@ -81,7 +122,6 @@ const updateAnime = AsyncHandler(async (req, res) => {
   ) {
     throw new ApiError(400, "No fields to update present");
   }
-  const updateFields = {};
   if (anime_Name) updateFields.anime_Name = anime_Name;
   if (genre) updateFields.genre = genre;
   if (description) updateFields.description = description;
@@ -97,8 +137,8 @@ const updateAnime = AsyncHandler(async (req, res) => {
       $set: updateFields,
     },
     { new: true }
-  );
-  if (!updatedAnime) throw new ApiError(500, "ANime updation failed!");
+  ).select("-__v -createdAt -updatedAt -poster.public_id -poster.uploadedBy");
+  if (!updatedAnime) throw new ApiError(500, "Anime updation failed!");
   res
     .status(200)
     .json(new ApiResponse(updatedAnime, "Anime updated successfully!"));
@@ -106,6 +146,16 @@ const updateAnime = AsyncHandler(async (req, res) => {
 const deleteAnime = AsyncHandler(async (req, res) => {
   const anime_id = req.params.anime_id;
   if (!anime_id) throw new ApiError(400, "Anime id not provided!");
+  const posterfordeletion = await Anime.findById(anime_id);
+  if (!posterfordeletion)
+    throw new ApiError(400, "Anime for deletion not found");
+  const posterpublicid = await cloudinary.uploader.destroy(
+    posterfordeletion.poster.public_id
+  );
+  console.log(posterpublicid);
+  
+  if (!posterpublicid)
+    throw new ApiError(500, "Poster deletion from cloudinary unsuccessful!");
   const deletedAnime = await Anime.findByIdAndDelete(anime_id);
 
   if (!deletedAnime) {
@@ -133,7 +183,6 @@ const getAnimeById = AsyncHandler(async (req, res) => {
 });
 
 const getAnimes = AsyncHandler(async (req, res) => {
-  
   const search = req.query.search || "";
   const limit = parseInt(req.query.limit) || 10;
   const page = req.query.page ? parseInt(req.query.page) : null;
@@ -150,8 +199,9 @@ const getAnimes = AsyncHandler(async (req, res) => {
       { release_Year: { $regex: searchRegExp } },
     ],
   };
-  let animesQuery = Anime.find(filter).select("-__v -createdAt -updatedAt")
-  .sort({ [sortBy]: sortOrder });
+  let animesQuery = Anime.find(filter)
+    .select("-__v -createdAt -updatedAt")
+    .sort({ [sortBy]: sortOrder });
 
   if (page && limit) {
     const skip = (page - 1) * limit;
@@ -160,13 +210,13 @@ const getAnimes = AsyncHandler(async (req, res) => {
     if (!page && limit) animesQuery = animesQuery.limit(limit);
   }
   const animes = await animesQuery;
- 
+
   const totalAnimes = await Anime.countDocuments(filter);
   res.status(200).json({
     success: true,
-    Totalcount:totalAnimes,
+    Totalcount: totalAnimes,
     data: animes,
-   
+
     pagination: page
       ? {
           page,
@@ -177,5 +227,4 @@ const getAnimes = AsyncHandler(async (req, res) => {
   });
 });
 
-
-export { addAnime, updateAnime, deleteAnime, getAnimeById,getAnimes };
+export { addAnime, updateAnime, deleteAnime, getAnimeById, getAnimes };

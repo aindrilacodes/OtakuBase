@@ -54,8 +54,9 @@ const animeSchema = new mongoose.Schema(
       type: String,
     },
     poster: {
-      type: String,
-      // required: true,
+      url: { type: String, required: true },
+      uploadedBy: { type: String, default: "Anonymous" },
+      public_id: { type: String, required: true },
     },
     duration: {
       type: String,
