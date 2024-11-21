@@ -12,7 +12,7 @@ import { adminRolecheck } from "../middlewares/userRoleChecking.js";
 const router = express.Router();
 
 router.route("/").get(verifyUserToken, getProfileController);
-router.route("/changePassword").post(verifyUserToken, updatePassword);
+router.route("/changePassword").put(verifyUserToken, updatePassword);
 router.route("/myreviews").get(verifyUserToken, getMyReviews);
 router.route("/").put(verifyUserToken, updateUser);
 router.route("/").delete(verifyUserToken, deleteUser);
