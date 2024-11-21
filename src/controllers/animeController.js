@@ -220,7 +220,6 @@ const getAnimes = AsyncHandler(async (req, res) => {
     pagination: page
       ? {
           page,
-          limit,
           totalPages: Math.ceil(totalAnimes / limit),
         }
       : undefined,

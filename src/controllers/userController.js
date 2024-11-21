@@ -134,7 +134,6 @@ export const getAllUsers = AsyncHandler(async (req, res) => {
 
   const pagination = page
     ? {
-        limit,
         totalPages: Math.ceil(totalusers / limit),
         currentPage: page,
         previousPage: page - 1 > 0 ? page - 1 : null,
