@@ -58,3 +58,33 @@ This will start the API on http://localhost:<Your_Port_Number>
 ## API Endpoints
 
 ### Authentication
+
+- **POST** `/api/auth/register`  
+  Register a new user.
+
+- **POST** `/api/auth/login`  
+  Login and get a JWT token.
+
+### Anime
+- **GET** `/api/anime/:animeid`  
+  Fetch details of a specific anime.
+
+- **POST** `/api/anime/:animeid/reviews`  
+  Add a review for a specific anime.
+
+- **PUT** `/api/anime/:animeid/reviews/:reviewid`  
+  Update a review for a specific anime.
+
+- **DELETE** `/api/anime/:animeid/reviews/:reviewid`  
+  Delete a review for a specific anime.
+
+### Admin
+- **POST** `/api/admin/anime`  
+  Admin can add a new anime.
+
+- **DELETE** `/api/admin/anime/:animeid`  
+  Admin can delete an anime.
+
+### Upload
+- **POST** `/api/anime/:animeid/upload-poster`  
+  Upload an anime poster to Cloudinary.
