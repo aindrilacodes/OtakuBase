@@ -1,6 +1,7 @@
 {
   "name": "OtakuBase-An AnimeApi",
   "private": true,
+  "author": "Aindrila Dutta",
   "type": "module",
   "scripts": {
     "start": "node index.js",
