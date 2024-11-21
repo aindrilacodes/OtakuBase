@@ -1,7 +1,6 @@
 import ApiError from "../helpers/customError.js";
 import User from "../models/user.model.js";
 import AsyncHandler from "express-async-handler";
-import verifyUserToken from "../middlewares/auth.middleware.js";
 import ApiResponse from "../helpers/apiResponse.js"
 
 const options = {
@@ -31,13 +30,13 @@ const registerUser = AsyncHandler(async (req, res) => {
   const createdUser = await User.findById(user._id).select(
     "-password -_id"
   );
-  // console.log(createdUser);
+  
   
   if (!createdUser) {
     throw new ApiError(500, "Internal Server Error while registering the user");
   }
   const token = await createdUser.generateUserAccessToken();
-  // console.log(token);
+
   
   if (!token) throw new ApiError(400, "Error while generating token!");
   

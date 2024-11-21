@@ -32,8 +32,6 @@ const verifyUserToken=AsyncHandler(async(req,_,next)=>{
   delete userResponse.__v;  
   
   req.user = userResponse;
- // console.log(userResponse);
-  
   next();
 })
 
