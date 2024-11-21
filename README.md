@@ -53,6 +53,7 @@ CLOUDAPISECRET=your_cloudinary_api_secret
 ```bash
 npm run dev
 ```
+
 This will start the API on http://localhost:<Your_Port_Number>
 
 ## API Endpoints
@@ -60,31 +61,89 @@ This will start the API on http://localhost:<Your_Port_Number>
 ### Authentication
 
 - **POST** `/api/auth/register`  
-  Register a new user.
+  Register a new user/Admin and get a JWT token.
 
 - **POST** `/api/auth/login`  
   Login and get a JWT token.
 
-### Anime
-- **GET** `/api/anime/:animeid`  
-  Fetch details of a specific anime.
+- **POST** `/api/auth/logout`  
+  Logout and removes the JWT token.
 
-- **POST** `/api/anime/:animeid/reviews`  
+### Anime
+
+- **GET** `/api/anime/:animeid`  
+  Fetch details of a specific anime .
+
+- **GET** `/api/anime/anime/?sortBy=release_Year&sortOrder=asc&limit=5`  
+  Fetch details of all animes along with searching,sorting,pagination,limit(no.of animes).
+
+- **GET** `/api/anime/:animeid/allreviews`  
+  Fetch details of all the reviews for a specific anime .
+
+- **POST** `api/anime/:animeid/newReview`  
   Add a review for a specific anime.
 
-- **PUT** `/api/anime/:animeid/reviews/:reviewid`  
+- **PUT** `/api/anime/:animeid/updateReviews/:reviewid`  
   Update a review for a specific anime.
 
-- **DELETE** `/api/anime/:animeid/reviews/:reviewid`  
+- **DELETE** `/api/anime/:animeid/deleteReview/:reviewid`  
   Delete a review for a specific anime.
 
+### User
+
+- **POST** `/api/user/`  
+  Fetch the details of loggedin user
+- **POST** `/api/user`  
+  Update the logged in user account.
+
+- **DELETE** `/api/user`  
+  Delete the logged in user account.
+
+- **PUT** `/api/user`  
+  Update the logged in user .
+
+- **PUT** `/api/user/changePassword`  
+  Update the logged in user password .
+
+- **GET** `/api/user/myreviews`  
+  Fetches all reviews made by the logged in user .
+
 ### Admin
-- **POST** `/api/admin/anime`  
+
+- **POST** `/api/anime/`  
   Admin can add a new anime.
 
-- **DELETE** `/api/admin/anime/:animeid`  
+- **DELETE** `/api/anime/:animeid`  
   Admin can delete an anime.
 
-### Upload
-- **POST** `/api/anime/:animeid/upload-poster`  
-  Upload an anime poster to Cloudinary.
+- **PUT** `/api/anime/:animeid`  
+  Admin can update an anime.
+
+- **GET** `/api/user/allusers?limit =2`  
+   Fetch details of all users(not admins) along with searching,sorting,pagination,limit(no.of users).
+
+## 404 Not Found
+- **ANY** `/api/*`  
+  Handles any non-existent routes. Returns a 404 error with a message: "Route not found."
+
+## Technologies Used
+
+- **Node.js** - JavaScript runtime for building scalable applications.
+- **Express.js** - Web application framework for Node.js.
+- **MongoDB** - NoSQL database used for storing data.
+- **Mongoose** - MongoDB object modeling for Node.js.
+- **JWT (JSON Web Token)** - For user authentication and secure communication.
+- **Bcrypt.js** - Library for hashing passwords.
+- **Cloudinary** - Cloud storage service for uploading anime posters.
+- **Morgan** - HTTP request logger middleware for Node.js.
+- **dotenv** - For managing environment variables.
+- **Nodemon** - Development tool for automatically restarting the server on code changes.
+
+
+## Future Enhancements
+
+- Implement user-specific anime recommendations and favourites.
+
+## Author
+
+- **Aindrila Dutta** - [aindrilacodes](https://github.com/aindrilacodes)
