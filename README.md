@@ -122,9 +122,15 @@ This will start the API on http://localhost:<Your_Port_Number>
 - **GET** `/api/user/allusers?limit =2`  
    Fetch details of all users(not admins) along with searching,sorting,pagination,limit(no.of users).
 
-## 404 Not Found
+### 404 Not Found
+
 - **ANY** `/api/*`  
   Handles any non-existent routes. Returns a 404 error with a message: "Route not found."
+
+### Landing Page
+
+- **GET** `/`  
+   Serves the "Get Started" HTML page, providing an overview of how to use the OtakuBase API.
 
 ## Technologies Used
 
@@ -138,7 +144,6 @@ This will start the API on http://localhost:<Your_Port_Number>
 - **Morgan** - HTTP request logger middleware for Node.js.
 - **dotenv** - For managing environment variables.
 - **Nodemon** - Development tool for automatically restarting the server on code changes.
-
 
 ## Future Enhancements
 
