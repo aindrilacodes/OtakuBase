@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Started - OtakuBase API</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #6c63ff;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    .container h2 {
+      color: #6c63ff;
+      margin-bottom: 15px;
+    }
+    .container p {
+      line-height: 1.6;
+    }
+    .container code {
+      background-color: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 0.8em;
+    }
+    footer {
+      text-align: center;
+      margin: 20px 0;
+      color: #aaa;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #6c63ff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background-color: #594de7;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>OtakuBase API</h1>
+</header>
+
+<div class="container">
+  <h2>Welcome to OtakuBase API</h2>
+  <p>
+    OtakuBase API provides endpoints to manage anime data, user reviews, and authentication for your otaku-themed applications.
+  </p>
+  
+  <h3>Features:</h3>
+  <ul>
+    <li>Fetch anime details like description, genres, and ratings.</li>
+    <li>CRUD operations for anime reviews.</li>
+    <li>User authentication using JWT tokens.</li>
+    <li>Role-based access for Admin and User roles.</li>
+    <li>Upload anime posters to Cloudinary.</li>
+  </ul>
+
+  <h3>Getting Started:</h3>
+  <p>
+    To start using the OtakuBase API, clone the repository and install the dependencies:
+  </p>
+  <code>git clone https://github.com/aindrilacodes/OtakuBase.git</code><br>
+  <code>npm install</code>
+  
+  <h3>Base URL:</h3>
+  <code>https://your-deployed-url.vercel.app</code>
+
+  <h3>Endpoints:</h3>
+  <ul>
+    <li><code>POST /api/auth/register</code> - Register a new user.</li>
+    <li><code>POST /api/auth/login</code> - Login and receive a JWT token.</li>
+    <li><code>GET /api/anime/</code> - Fetch all anime details.</li>
+  </ul>
+  
+  <a href="https://github.com/aindrilacodes/OtakuBase#readme" class="btn">Read Full Documentation</a>
+</div>
+
+<footer>
+  &copy; 2024 OtakuBase API. All rights reserved.
+</footer>
+
+</body>
+</html>
