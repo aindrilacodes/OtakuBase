@@ -25,6 +25,10 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "pages")));
 
 // Routes
+//root route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "pages", "get-started.html"));
+});
 app.use("/api/auth", authRouter);
 app.use("/api/anime", animeRouter);
 app.use("/api/user", userRouter);
