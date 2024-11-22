@@ -24,7 +24,7 @@ OtakuBase is an anime-related platform offering API services for anime listings,
 
    ```bash
    git clone https://github.com/your-username/otakuBase-api.git
-   cd otakuBase
+   cd OtakuBase
 
    ```
 
